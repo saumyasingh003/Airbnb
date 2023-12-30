@@ -1,0 +1,127 @@
+<% layout("./layouts/boilerplate") %>
+<body>
+  <div class="row" style="margin-top: 2rem">
+    <div class="col-8 offset-2">
+      <h1 style="text-align: center"><b>Add something new</b></h1>
+      <form
+        method="POST"
+        action="/listings"
+        class="needs-validation"
+        novalidate
+        enctype="multipart/form-data"
+      >
+        <div class="mb-3">
+          <label for="title" class="form-lable">Title:</label>
+          <input
+            id="title"
+            name="title"
+            placeholder="Enter a Cachy Title"
+            type="text"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Enter Title</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-lable">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Enter Description"
+            type="text"
+            class="form-control"
+            required
+          ></textarea>
+          <div class="invalid-feedback">Enter Description</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="image" class="form-label">Upload Image:</label>
+          <input
+              id="image"
+              name="listing[image]"
+              type="file"
+              class="form-control"
+              required
+          />
+      </div>
+      
+
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label for="price" class="form-lable">Price:</label>
+            <input
+              id="price"
+              name="price"
+              placeholder="Enter Price"
+              class="form-control"
+              required
+            />
+            <div class="invalid-feedback">Enter Price</div>
+          </div>
+
+          <div class="mb-4 col-md-8">
+            <label for="country" class="form-lable">Country:</label>
+            <input
+              id="country"
+              name="country"
+              placeholder="Enter Country"
+              type="text"
+              class="form-control"
+              required
+            />
+            <div class="invalid-feedback">Enter Country</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="location"  class="form-lable">Location:</label>
+          <input
+            id="location"
+            name="location"
+            placeholder="Enter Location"
+            type="text"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Enter Location</div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-dark add-btn"
+          style="background-color: #ee212f; border: none"
+        >
+          Add
+        </button>
+      </form>
+      <br /><br />
+    </div>
+  </div>
+  <!-- <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+      "use strict";
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll(".needs-validation");
+
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener(
+          "submit",
+          function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            form.classList.add("was-validated");
+          },
+          false
+        );
+      });
+    })();
+  </script> -->
+</body>
