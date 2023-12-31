@@ -66,7 +66,7 @@ module.exports.createListing = async (req, res, next) => {
 
     newListing.owner = req.user._id;
     
-    // Save the listing to the database
+    
     const savedListing = await newListing.save();
     console.log(savedListing)
     console.log("API call ended")
@@ -81,29 +81,61 @@ module.exports.createListing = async (req, res, next) => {
 
 //edit
 module.exports.editListings = async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  if (!listing) {
-    req.flash("error", " Listing Your requested does not Exist!");
-    res.redirect("/listings");
-  }
+  try {
+    let { id } = req.params;
+    const listing = await Listing.findById(id);
 
-  let originalImageUrl = listing.image.url;
-  originalImageUrl = originalImageUrl.replace("/upload" ,"/upload/h_300,w_250");
-  res.render("listings/edit.ejs", { listing , originalImageUrl});
+    if (!listing) {
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
+    }
+
+    let originalImageUrl = listing.image.url;
+    originalImageUrl = originalImageUrl.replace("/upload", "/upload/h_300,w_250");
+
+    res.render("listings/edit.ejs", { listing, originalImageUrl });
+  } catch (error) {
+    console.error("Error editing listing:", error);
+    req.flash("error", "Error editing listing");
+    res.status(500).redirect("/listings");
+  }
 };
 
-//update
+
 module.exports.update = async (req, res) => {
   let { id } = req.params;
-   let listing = await Listing.findByIdAndUpdate(id, { ...req.body });
+let { location, ...otherFields } = req.body; 
+let response = await geoCodingClient.forwardGeocode({
+  query: location,
+  limit: 1
+}).send();
 
-  if (typeof req.file  !== "undefined") {
-    let url = req.file.path;
-    let filename = req.file.filename;
-    listing.image = { url, filename };
-    await listing.save();
-  }
+if (!response || !response.body || !response.body.features || response.body.features.length === 0) {
+  throw new Error("Invalid geocoding response");
+}
+
+const coordinates = response.body.features[0].geometry.coordinates;
+
+let updatedListing = await Listing.findByIdAndUpdate(
+  id,
+  {
+    ...otherFields, 
+    location,      
+    geometry: {
+      type: "Point",
+      coordinates: coordinates,
+    },
+  },
+  { new: true } // Ensure you get the updated document
+);
+
+if (typeof req.file !== "undefined") {
+  let url = req.file.path;
+  let filename = req.file.filename;
+  updatedListing.image = { url, filename };
+}
+
+await updatedListing.save();
 
   req.flash("success", "Listing Updated!");
   res.redirect(`/listings/${id}`);

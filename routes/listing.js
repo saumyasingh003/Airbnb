@@ -44,7 +44,6 @@ router
     isLoggedIn,
     isOwner,
     upload.single("listing[image]"),
-    // validateListing,
     WrapAsync(listingControllers.update)
   )
   //Delete  route
@@ -55,6 +54,7 @@ router.get(
   "/:id/edit",
   isLoggedIn,
   isOwner,
+  upload.single("listing[image]"),
   WrapAsync(listingControllers.editListings)
 );
 

@@ -35,25 +35,6 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 const baseUrl = "";
-
-
-
-const atlasDbUrl = process.env.ATLASDB_URL;
-
-const connectToDatabase = async () => {
-  try {
-    await mongoose.connect(atlasDbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('Database connected');
-  } catch (error) {
-    console.error('Error connecting to MongoDB Atlas:', error);
-  }
-};
-
-// module.exports = connectToDatabase;
-
   
 
 
@@ -65,14 +46,15 @@ const sessionOptions = {
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
+    // httpOnly: true,
+    secure:false,
   },
 };
 
-app.use(session(sessionOptions));
 app.use(flash());
 
 app.use(passport.initialize());
+app.use(session(sessionOptions));
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 
@@ -89,6 +71,9 @@ app.use((req, res, next) => {
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
 app.use("/", users);
+app.use((req,res,next)=>{
+  res.redirect("/listings");
+})
 
 // app.get("/demouser", async (req, res) => {
 //   let fakeUser = new User({
@@ -108,7 +93,7 @@ app.use((err, req, res, next) => {
   let { status = 500, message = "Something Went Wrong" } = err;
   res.status(status).render("error.ejs", { message });
 });
-initDatabase();
+// initDatabase();
 
 app.listen(8080, () => {
   console.log("server is listening to port 8080");

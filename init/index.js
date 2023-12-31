@@ -12,10 +12,10 @@ mongoose
     console.log(err);
   });
 
-  const   initDatabase = async () =>{
-    await Listing.deleteMany({}),
-    initData.data = initData.data.map((obj) => ({ ...obj, owner: "658d339c3dffaa5de9c7f455" }));
-    await Listing.insertMany(initData.data);
-    console.log("Data was initialized"); 
-  };
-module.exports = initDatabase;
+//   const   initDatabase = async () =>{
+//     await Listing.deleteMany({}),
+//     initData.data = initData.data.map((obj) => ({ ...obj, owner: "659048e8cae424adacf13dcc" }));
+//     await Listing.insertMany(initData.data);
+//     console.log("Data was initialized"); 
+//   };
+// module.exports = initDatabase;
